@@ -34,7 +34,7 @@
             <thead>
             <tr class="bg-info">
                 <th>Customer Number</th>
-                <th>Customer Name</th>
+                {#                <th>Customer Name</th>#}
                 <th>Category</th>
                 <th>Description</th>
                 <th>Acquired Value</th>
@@ -48,7 +48,7 @@
             {% for investment in investments %}
                 <tr>
                 <td>{{ investment.cust_number }}</td>
-                <td>{{ investment.name }}</td>
+                {#                <td>{{ investment.name }}</td>#}
                 <td>{{ investment.category }}</td>
                 <td>{{ investment.description }}</td>
                 <td>{{ investment.acquired_value }}</td>
@@ -62,6 +62,10 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="row">
+            <a href="{% url 'portfolio:investment_new' %}" class="row"><span
+                    class="btn btn-primary">Add Investment</span></a>
+        </div>
     </div>
     </body>
     </html>

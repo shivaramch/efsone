@@ -31,6 +31,7 @@ class Customer(models.Model):
 
 class Investment(models.Model):
     category = models.CharField(max_length=50)
+    # name = models.CharField('portfolio.Customer')
     description = models.CharField(max_length=200)
     cust_number = models.ForeignKey('portfolio.Customer')
     acquired_value = models.DecimalField(max_digits=10, decimal_places=2)

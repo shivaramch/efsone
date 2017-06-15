@@ -1,6 +1,5 @@
 from django.utils import timezone
 from .models import *
-from . import models
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -70,10 +69,10 @@ def stock_new(request):
         form = StockForm(request.POST)
         if form.is_valid():
             stock = form.save(commit=False)
-            stock.cust_number = request.user.pk
+            stock.cust_number = stock
             stock.created_date = timezone.now()
             stock.save()
-            return redirect('portfolio:stock', request.stock.pk)
+            return redirect('portfolio:stock', pk=request.stock.pk)
     else:
         form = StockForm()
     return render(request, 'portfolio/stock_new.html', {'form': form})
@@ -86,10 +85,10 @@ def stock_edit(request, cust_number):
         form = StockForm(request.POST, instance=stock)
         if form.is_valid():
             stock = form.save(commit=False)
-            stock.cust_number = request.user.pk
+            stock.cust_number = stock
             stock.updated_date = timezone.now()
             stock.save()
-            return redirect('portfolio:stock_edit', request.stock.pk)
+            return redirect('portfolio:stock_edit', pk=request.stock.pk)
     else:
         form = StockForm(instance=stock)
     return render(request, 'portfolio/stock_edit.html', {'form': form})
@@ -114,10 +113,10 @@ def investment_new(request):
         form = InvestmentForm(request.POST)
         if form.is_valid():
             investment = form.save(commit=False)
-            investment.cust_number = request.user.pk
+            investment.category = investment
             investment.created_date = timezone.now()
             investment.save()
-            return redirect('portfolio:investment', request.investment.pk)
+            return redirect('portfolio:investment', pk=request.investment.pk)
     else:
         form = InvestmentForm()
     return render(request, 'portfolio/investment_new.html', {'form': form})
@@ -130,10 +129,10 @@ def investment_edit(request, cust_number):
         form = InvestmentForm(request.POST, instance=investment)
         if form.is_valid():
             investment = form.save(commit=False)
-            investment.cust_number = request.user.pk
+            investment.cust_number = investment
             investment.updated_date = timezone.now()
             investment.save()
-            return redirect('portfolio:investment_edit', request.investment.pk)
+            return redirect('portfolio:investment_edit', pk=request.investment.pk)
     else:
         form = InvestmentForm(instance=investment)
     return render(request, 'portfolio/investment_edit.html', {'form': form})
