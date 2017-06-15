@@ -21,8 +21,6 @@
               href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
               integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
               crossorigin="anonymous">
-        {#    {{ -- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}#}
-
         <style>
             body {
                 font-family: 'Lato';
@@ -37,109 +35,107 @@
     </head>
     <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-    <div class="navbar-header">
+        <div class="container">
+            <div class="navbar-header">
 
-        <!-- Collapsed Hamburger -->
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                data-target="#app-navbar-collapse">
-            <span class="sr-only">Toggle Navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
+                <!-- Collapsed Hamburger -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#app-navbar-collapse">
+                    <span class="sr-only">Toggle Navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-        <!-- Branding Image -->
-        <a class="navbar-brand" href="/">
-            Eagle Financial Services
-        </a>
-    </div>
+                <!-- Branding Image -->
+                <a class="navbar-brand" href="/">
+                    Eagle Financial Services
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                <!-- Left Side Of Navbar -->
+                {% if user.is_authenticated %}
+                    <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'portfolio:home' %}">Home</a></li>
+                    <li><a href="{% url 'portfolio:customer' %}">Customers</a></li>
+                    <li><a href="{% url 'portfolio:investment' %}">Investments</a></li>
+                    <li><a href="{% url 'portfolio:stock' %}">Stocks</a></li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
+                {% else %}
+                    <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                {% endif %}
+                </ul>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="page-container">
 
-    <div class="collapse navbar-collapse" id="app-navbar-collapse">
-    <!-- Left Side Of Navbar -->
-    <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'portfolio:home' %}">Home</a></li>
-        <li><a href="{% url 'portfolio:customer' %}">Customers</a></li>
-        <li><a href="{% url 'portfolio:investment' %}">Investments</a></li>
-        <li><a href="{% url 'portfolio:stock' %}">Stocks</a></li>
-    </ul>
+                    <h2 class="top-menu">Hello {{ user.username }},</h2>
+                    <p>Please choose from below options.</p>
 
-
-    <div class="page-header">
-        {% if user.is_authenticated %}
-            {#            <a href="{% url 'customers:customer' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>#}
-            {#            <a href="{% url 'investments:investment' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>#}
-            {#            <a href="{% url 'stocks:stock' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>#}
-
-            <p class="top-menu">Hello {{ user.username }}
-                <small>(<a href="{% url 'logout' %}">Log out</a>)</small>
-            </p>
-        {% else %}
-            <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
-        {% endif %}
-        <h1><a href="/">Eagle Financial Services</a></h1>
-    </div>
-    <div class="content container">
-    <div class="row">
-    <div class="col-md-8">
-    <div class="links">
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="thumbnail">
-                <img src="{% static "images/customer.jpg" %}" alt="customer"/>
-                <div class="caption">
-                    <h2>Customer</h2>
-                    <p>We see our success in our customers success, it gives us an immense pleasure when our
-                        advises
-                        turn out to be fruitful. </p>
-                    <p><a class="btn btn-default" href="{% url 'portfolio:customer' %}" role="button">View
-                        details &raquo;</a></p>
+                </div>
+            {% endif %}
+            <div class="content container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="links">
+                            <!-- Example row of columns -->
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        <img src="{% static "images/customer.jpg" %}" alt="customer"/>
+                                        <div class="caption">
+                                            <h2>Customer</h2>
+                                            <p>We see our success in our customers success, it gives us an immense
+                                                pleasure when our
+                                                advises
+                                                turn out to be fruitful. </p>
+                                            <p><a class="btn btn-default" href="{% url 'portfolio:customer' %}"
+                                                  role="button">View
+                                                details &raquo;</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        <img src="{% static "images/nonstock.jpg" %}" alt="non-stock"/>
+                                        <div class="caption">
+                                            <h2>Non-Stock Investments</h2>
+                                            <p>Our team also provides advises for Non-Stock investments.</p>
+                                            <p><a class="btn btn-default" href="{% url 'portfolio:investment' %}"
+                                                  role="button">View
+                                                details &raquo;</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        <img src="{% static "images/stocks.jpg" %}" alt="stocks"/>
+                                        <div class="caption">
+                                            <h2>Stock Portfolio</h2>
+                                            <p>Our Stock portfolios vary across industries.</p>
+                                            <p><a class="btn btn-default" href="{% url 'portfolio:stock' %}"
+                                                  role="button">View
+                                                details &raquo;</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="thumbnail">
+                                        <img src="{% static "images/mutualfunds.gif" %}" alt="mutualfund"/>
+                                        <div class="caption">
+                                            <h2>Mutual Funds</h2>
+                                            <p>Invest wisely earn more.</p>
+                                            <p><a class="btn btn-default" href="{% url 'portfolio:customer' %}"
+                                                  role="button">View
+                                                details &raquo;</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="thumbnail">
-                <img src="{% static "images/nonstock.jpg" %}" alt="non-stock"/>
-                <div class="caption">
-                    <h2>Non-Stock Investments</h2>
-                    <p>Our team also provides advises for Non-Stock investments.</p>
-                    <p><a class="btn btn-default" href="{% url 'portfolio:investment' %}" role="button">View
-                        details &raquo;</a></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="thumbnail">
-                <img src="{% static "images/stocks.jpg" %}" alt="stocks"/>
-                <div class="caption">
-                    <h2>Stock Portfolio</h2>
-                    <p>Our Stock portfolios vary across industries.</p>
-                    <p><a class="btn btn-default" href="{% url 'portfolio:stock' %}" role="button">View
-                        details &raquo;</a></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="thumbnail">
-                <img src="{% static "images/mutualfunds.gif" %}" alt="mutualfund"/>
-                <div class="caption">
-                    <h2>Mutual Funds</h2>
-                    <p>Invest wisely earn more.</p>
-                    <p><a class="btn btn-default" href="{% url 'portfolio:customer' %}" role="button">View
-                        details &raquo;</a></p>
-                </div>
-            </div>
-        </div>
-        <!--<div class="widget">
-            <iframe src="http://tsw.forexprostools.com?&forex=1,2,3,5,7,9,10&commodities=8830,8836,8831,8849,8833,8862,8832&indices=175,166,172,27,167,40830,179&stocks=284,280,282,287,286,288,295&tabs=1,2,3,4" width="317" height="467"></iframe><div class="poweredBy" style="font-family:arial,helvetica,sans-serif; direction:ltr;"><span style="font-size: 11px;color: #333333;text-decoration: none;">Technical Summary Widget Powered by <a href="http://www.investing.com/" rel="nofollow" target="_blank" style="font-size: 11px;color: #06529D; font-weight: bold;" class="underline_link">Investing.com</a></span></div>
-        </div>-->
-        <br/>
-    </div>
-
+    </body>
+    </html>
 {% endblock %}
-</div>
-</div>
-</div>
-</body>
-</html>

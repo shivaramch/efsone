@@ -1,11 +1,11 @@
 from django.utils import timezone
 from .models import *
+from . import models
 from django.shortcuts import render, get_object_or_404
-# from django.shortcuts import redirect
+from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 
 
 def home(request):
@@ -16,12 +16,23 @@ def home(request):
 @login_required
 def customer(request):
     customers = Customer.objects.filter(created_date__lte=timezone.now())
-    # investments = Investment.objects.filter(acquired_date__lte=timezone.now())
-    # stocks = Stock.objects.filter(recent_date__lte=timezone.now())
     return render(request, 'portfolio/customer.html',
                   {'customers': customers})
-    # return render(request, 'customers/customer.html',
-    #               {'customers': customers, 'investments': investments, 'stocks': stocks})
+
+
+@login_required
+def customer_new(request):
+    if request.method == "POST":
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.cust_number = request.user.pk
+            customer.created_date = timezone.now()
+            customer.save()
+            return redirect('portfolio:customer', request.customer.pk)
+    else:
+        form = CustomerForm()
+    return render(request, 'portfolio/customer_new.html', {'form': form})
 
 
 @login_required
@@ -29,23 +40,22 @@ def customer_edit(request, cust_number):
     customer = get_object_or_404(Customer, pk=cust_number)
     if request.method == "POST":
         form = CustomerForm(request.POST, instance=customer)
-        # form = CustomerForm(request.CUSTOMER, )
         if form.is_valid():
             customer = form.save(commit=False)
             customer.cust_number = request.user.pk
-            customer.name = request.user
-            customer.address = request.user
-            customer.city = request.user
-            customer.state = request.user
-            customer.zipcode = request.user
-            customer.email = request.user
-            customer.cell_phone = request.user
             customer.updated_date = timezone.now()
             customer.save()
-            return reverse('customers:customer_edit', request.user.pk)
+            return redirect('portfolio:customer_edit', request.customer.pk)
     else:
-        form = CustomerForm()
-        return render(request, 'portfolio/customer_edit.html', {'form': form})
+        form = CustomerForm(instance=customer)
+    return render(request, 'portfolio/customer_edit.html', {'form': form})
+
+
+@login_required
+def customer_delete(request, cust_number):
+    customer = get_object_or_404(Customer, pk=cust_number)
+    customer.delete()
+    return redirect('portfolio:customer')
 
 
 @login_required
@@ -55,6 +65,82 @@ def stock(request):
 
 
 @login_required
+def stock_new(request):
+    if request.method == "POST":
+        form = StockForm(request.POST)
+        if form.is_valid():
+            stock = form.save(commit=False)
+            stock.cust_number = request.user.pk
+            stock.created_date = timezone.now()
+            stock.save()
+            return redirect('portfolio:stock', request.stock.pk)
+    else:
+        form = StockForm()
+    return render(request, 'portfolio/stock_new.html', {'form': form})
+
+
+@login_required
+def stock_edit(request, cust_number):
+    stock = get_object_or_404(Customer, pk=cust_number)
+    if request.method == "POST":
+        form = StockForm(request.POST, instance=stock)
+        if form.is_valid():
+            stock = form.save(commit=False)
+            stock.cust_number = request.user.pk
+            stock.updated_date = timezone.now()
+            stock.save()
+            return redirect('portfolio:stock_edit', request.stock.pk)
+    else:
+        form = StockForm(instance=stock)
+    return render(request, 'portfolio/stock_edit.html', {'form': form})
+
+
+@login_required
+def stock_delete(request, cust_number):
+    stock = get_object_or_404(Stock, pk=cust_number)
+    stock.delete()
+    return redirect('portfolio:stock')
+
+
+@login_required
 def investment(request):
     investments = Investment.objects.filter(acquired_date__lte=timezone.now())
     return render(request, 'portfolio/investment.html', {'investments': investments})
+
+
+@login_required
+def investment_new(request):
+    if request.method == "POST":
+        form = InvestmentForm(request.POST)
+        if form.is_valid():
+            investment = form.save(commit=False)
+            investment.cust_number = request.user.pk
+            investment.created_date = timezone.now()
+            investment.save()
+            return redirect('portfolio:investment', request.investment.pk)
+    else:
+        form = InvestmentForm()
+    return render(request, 'portfolio/investment_new.html', {'form': form})
+
+
+@login_required
+def investment_edit(request, cust_number):
+    investment = get_object_or_404(Customer, pk=cust_number)
+    if request.method == "POST":
+        form = InvestmentForm(request.POST, instance=investment)
+        if form.is_valid():
+            investment = form.save(commit=False)
+            investment.cust_number = request.user.pk
+            investment.updated_date = timezone.now()
+            investment.save()
+            return redirect('portfolio:investment_edit', request.investment.pk)
+    else:
+        form = InvestmentForm(instance=investment)
+    return render(request, 'portfolio/investment_edit.html', {'form': form})
+
+
+@login_required
+def investment_delete(request, cust_number):
+    investment = get_object_or_404(Investment, pk=cust_number)
+    investment.delete()
+    return redirect('portfolio:investment')

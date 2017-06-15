@@ -17,9 +17,19 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r'^$', views.home, name='home'),
     url(r'^home/$', views.home, name='home'),
     url(r'^customer/$', views.customer, name='customer'),
-    url(r'^investment/$', views.investment, name='investment'),
-    url(r'^stock/$', views.stock, name='stock'),
+    url(r'^customer/(?P<cust_number>\d+)/delete/$', views.customer_delete, name='customer_delete'),
     url(r'^customer/(?P<cust_number>\d+)/edit/$', views.customer_edit, name='customer_edit'),
+    url(r'^create/$', views.customer_new, name='customer_new'),
+    url(r'^investment/$', views.investment, name='investment'),
+    url(r'^investment/(?P<cust_number>\d+)/delete/$', views.investment_delete, name='investment_delete'),
+    url(r'^investment/(?P<cust_number>\d+)/edit/$', views.investment_edit, name='investment_edit'),
+    url(r'^create/$', views.investment_new, name='investment_new'),
+    url(r'^stock/$', views.stock, name='stock'),
+    url(r'^stock/(?P<cust_number>\d+)/delete/$', views.stock_delete, name='stock_delete'),
+    url(r'^stock/(?P<cust_number>\d+)/edit/$', views.stock_edit, name='stock_edit'),
+    url(r'^create/$', views.stock_new, name='stock_new'),
+
 ]
