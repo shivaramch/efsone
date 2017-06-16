@@ -19,19 +19,19 @@ def customer(request):
                   {'customers': customers})
 
 
-@login_required
-def customer_new(request):
-    if request.method == "POST":
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            customer = form.save(commit=False)
-            customer.cust_number = request.user.pk
-            customer.created_date = timezone.now()
-            customer.save()
-            return redirect('portfolio:customer', request.customer.pk)
-    else:
-        form = CustomerForm()
-    return render(request, 'portfolio/customer_new.html', {'form': form})
+# @login_required
+# def customer_new(request):
+#     if request.method == "POST":
+#         form = CustomerForm(request.POST)
+#         if form.is_valid():
+#             customer = form.save(commit=False)
+#             customer.cust_number = request.user.pk
+#             customer.created_date = timezone.now()
+#             customer.save()
+#             return redirect('portfolio:customer', request.customer.pk)
+#     else:
+#         form = CustomerForm()
+#     return render(request, 'portfolio/customer_new.html', {'form': form})
 
 
 @login_required
@@ -44,7 +44,10 @@ def customer_edit(request, cust_number):
             customer.cust_number = request.user.pk
             customer.updated_date = timezone.now()
             customer.save()
-            return redirect('portfolio:customer_edit', request.customer.pk)
+            customers = Customer.objects.filter(created_date__lte=timezone.now())
+            return render(request, 'portfolio/customer.html',
+                          {'customers': customers})
+            # return redirect('portfolio/customer.html', request.customer.pk)
     else:
         form = CustomerForm(instance=customer)
     return render(request, 'portfolio/customer_edit.html', {'form': form})
@@ -69,7 +72,7 @@ def stock_new(request):
         form = StockForm(request.POST)
         if form.is_valid():
             stock = form.save(commit=False)
-            stock.cust_number = stock
+            customer.cust_number = request.user.pk
             stock.created_date = timezone.now()
             stock.save()
             return redirect('portfolio:stock', pk=request.stock.pk)
@@ -85,7 +88,7 @@ def stock_edit(request, cust_number):
         form = StockForm(request.POST, instance=stock)
         if form.is_valid():
             stock = form.save(commit=False)
-            stock.cust_number = stock
+            customer.cust_number = request.user.pk
             stock.updated_date = timezone.now()
             stock.save()
             return redirect('portfolio:stock_edit', pk=request.stock.pk)
@@ -113,7 +116,7 @@ def investment_new(request):
         form = InvestmentForm(request.POST)
         if form.is_valid():
             investment = form.save(commit=False)
-            investment.category = investment
+            investment.cust_number = investment.cust_number
             investment.created_date = timezone.now()
             investment.save()
             return redirect('portfolio:investment', pk=request.investment.pk)
@@ -129,7 +132,7 @@ def investment_edit(request, cust_number):
         form = InvestmentForm(request.POST, instance=investment)
         if form.is_valid():
             investment = form.save(commit=False)
-            investment.cust_number = investment
+            investment.cust_number = investment.cust_number
             investment.updated_date = timezone.now()
             investment.save()
             return redirect('portfolio:investment_edit', pk=request.investment.pk)
