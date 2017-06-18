@@ -14,9 +14,9 @@ def home(request):
 
 @login_required
 def customer(request):
-    customers = Customer.objects.filter(created_date__lte=timezone.now())
+    customer = Customer.objects.filter(created_date__lte=timezone.now())
     return render(request, 'portfolio/customer.html',
-                  {'customers': customers})
+                  {'customers': customer})
 
 
 # @login_required
@@ -38,17 +38,19 @@ def customer(request):
 def customer_edit(request, cust_number):
     customer = get_object_or_404(Customer, pk=cust_number)
     if request.method == "POST":
+        # update
         form = CustomerForm(request.POST, instance=customer)
         if form.is_valid():
             customer = form.save(commit=False)
-            customer.cust_number = request.user.pk
+            customer.cust_number = cust_number
             customer.updated_date = timezone.now()
             customer.save()
             customers = Customer.objects.filter(created_date__lte=timezone.now())
             return render(request, 'portfolio/customer.html',
-                          {'customers': customers})
+                          {'customers': customer})
             # return redirect('portfolio/customer.html', request.customer.pk)
     else:
+        # edit
         form = CustomerForm(instance=customer)
     return render(request, 'portfolio/customer_edit.html', {'form': form})
 
@@ -62,8 +64,8 @@ def customer_delete(request, cust_number):
 
 @login_required
 def stock(request):
-    stocks = Stock.objects.filter(recent_date__lte=timezone.now())
-    return render(request, 'portfolio/stock.html', {'stocks': stocks})
+    stock = Stock.objects.filter(recent_date__lte=timezone.now())
+    return render(request, 'portfolio/stock.html', {'stocks': stock})
 
 
 @login_required
@@ -83,6 +85,7 @@ def stock_new(request):
 
 @login_required
 def stock_edit(request, cust_number):
+    print(cust_number)
     stock = get_object_or_404(Customer, pk=cust_number)
     if request.method == "POST":
         form = StockForm(request.POST, instance=stock)
@@ -106,20 +109,22 @@ def stock_delete(request, cust_number):
 
 @login_required
 def investment(request):
-    investments = Investment.objects.filter(acquired_date__lte=timezone.now())
-    return render(request, 'portfolio/investment.html', {'investments': investments})
+    investment = Investment.objects.filter(acquired_date__lte=timezone.now())
+    return render(request, 'portfolio/investment.html', {'investments': investment})
 
 
 @login_required
 def investment_new(request):
+    # investment = get_object_or_404(customer.cust_number)
     if request.method == "POST":
         form = InvestmentForm(request.POST)
         if form.is_valid():
-            investment = form.save(commit=False)
-            investment.cust_number = investment.cust_number
+            investment = form.save()
+            # investment.customer = investment.cust_number
             investment.created_date = timezone.now()
             investment.save()
-            return redirect('portfolio:investment', pk=request.investment.pk)
+            investment = Investment.objects.filter(acquired_date__lte=timezone.now())
+            return render(request, 'portfolio/investment.html', {'investments': investment})
     else:
         form = InvestmentForm()
     return render(request, 'portfolio/investment_new.html', {'form': form})
@@ -127,16 +132,19 @@ def investment_new(request):
 
 @login_required
 def investment_edit(request, cust_number):
+    print(cust_number)
     investment = get_object_or_404(Customer, pk=cust_number)
     if request.method == "POST":
+        print("if")
         form = InvestmentForm(request.POST, instance=investment)
         if form.is_valid():
             investment = form.save(commit=False)
-            investment.cust_number = investment.cust_number
+            investment.cust_number = cust_number
             investment.updated_date = timezone.now()
             investment.save()
             return redirect('portfolio:investment_edit', pk=request.investment.pk)
     else:
+        print("else")
         form = InvestmentForm(instance=investment)
     return render(request, 'portfolio/investment_edit.html', {'form': form})
 
